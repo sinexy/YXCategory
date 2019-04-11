@@ -106,4 +106,85 @@
     return self.frame.size;
 }
 
+
+- (void)yx_setLayerShadow:(UIColor *)color offset:(CGSize)offset radius:(CGFloat)radius {
+    self.layer.shadowColor = color.CGColor;
+    self.layer.shadowOffset = offset;
+    self.layer.shadowRadius = radius;
+    self.layer.shadowOpacity = 1;
+    self.layer.shouldRasterize = YES;
+    self.layer.rasterizationScale = [UIScreen mainScreen].scale;
+}
+
+- (void)yx_setGradientLayerWithDirection:(YXGradientLayerDirection)direction startColor:(UIColor *)startColor endColor:(UIColor *)endColor {
+    [self layoutIfNeeded];
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    gradientLayer.colors = @[(__bridge id)startColor.CGColor, (__bridge id)endColor.CGColor];
+    gradientLayer.locations = @[@0.0,@1.0];
+    switch (direction) {
+        case YXGradientLayerDirectionLeftToRight: {
+            gradientLayer.startPoint = CGPointMake(0, 0);
+            gradientLayer.endPoint = CGPointMake(1.0, 0);
+        }
+            break;
+        case YXGradientLayerDirectionRightToLeft: {
+            gradientLayer.startPoint = CGPointMake(1.0, 0);
+            gradientLayer.endPoint = CGPointMake(0.0, 0);
+        }
+            break;
+        case YXGradientLayerDirectionTopToBottom: {
+            gradientLayer.startPoint = CGPointMake(0, 0);
+            gradientLayer.endPoint = CGPointMake(0, 1.0);
+        }
+            break;
+        case YXGradientLayerDirectionBottomToTop: {
+            gradientLayer.startPoint = CGPointMake(0, 1.0);
+            gradientLayer.endPoint = CGPointMake(0.0, 0);
+        }
+            break;
+        case YXGradientLayerDirectionTopLeftToBottomRight: {
+            gradientLayer.startPoint = CGPointMake(0, 0);
+            gradientLayer.endPoint = CGPointMake(1.0, 1.0);
+        }
+            break;
+        case YXGradientLayerDirectionBottomRightToTopLeft: {
+            gradientLayer.startPoint = CGPointMake(1.0, 1.0);
+            gradientLayer.endPoint = CGPointMake(0, 0);
+        }
+            break;
+        case YXGradientLayerDirectionBottomLeftToTopRight: {
+            gradientLayer.startPoint = CGPointMake(0, 1.0);
+            gradientLayer.endPoint = CGPointMake(1.0, 0);
+        }
+            break;
+        case YXGradientLayerDirectionTopRightToBottomLeft: {
+            gradientLayer.startPoint = CGPointMake(1.0, 0);
+            gradientLayer.endPoint = CGPointMake(0, 1.0);
+        }
+            break;
+    }
+
+    gradientLayer.frame = self.bounds;
+    gradientLayer.cornerRadius = self.layer.cornerRadius;
+    
+    [self.layer addSublayer:gradientLayer];
+}
+
+- (UIViewController *)yx_viewController {
+    for (UIView *view = self; view; view = view.superview) {
+        UIResponder *nextResponder = [view nextResponder];
+        if ([nextResponder isKindOfClass:[UIViewController class]]) {
+            return (UIViewController *)nextResponder;
+        }
+    }
+    return nil;
+}
+
+
+- (void)yx_removeAllSubViews {
+    while (self.subviews.count) {
+        [self.subviews.lastObject removeFromSuperview];
+    }
+}
+
 @end
