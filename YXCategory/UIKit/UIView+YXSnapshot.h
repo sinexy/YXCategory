@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable NSData *)yx_snapshotPDF;
 
+
 @end
 
 NS_ASSUME_NONNULL_END
